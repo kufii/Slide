@@ -26,6 +26,7 @@ import me.ccrama.redditslide.Fragments.SelftextFull;
 import me.ccrama.redditslide.Fragments.TitleFull;
 import me.ccrama.redditslide.OfflineSubreddit;
 import me.ccrama.redditslide.PostLoader;
+import me.ccrama.redditslide.PostLoaderManager;
 import me.ccrama.redditslide.R;
 import me.ccrama.redditslide.Reddit;
 import me.ccrama.redditslide.SettingValues;
@@ -35,7 +36,6 @@ import me.ccrama.redditslide.Views.CatchStaggeredGridLayoutManager;
  * Created by ccrama on 9/17/2015.
  */
 public class Gallery extends FullScreenActivity implements SubmissionDisplay {
-    public static final String EXTRA_PROFILE     = "profile";
     public static final String EXTRA_PAGE        = "page";
     public static final String EXTRA_SUBREDDIT   = "subreddit";
     public static final String EXTRA_MULTIREDDIT = "multireddit";
@@ -49,12 +49,7 @@ public class Gallery extends FullScreenActivity implements SubmissionDisplay {
         overrideSwipeFromAnywhere();
         subreddit = getIntent().getExtras().getString(EXTRA_SUBREDDIT);
         String multireddit = getIntent().getExtras().getString(EXTRA_MULTIREDDIT);
-        String profile = getIntent().getExtras().getString(EXTRA_PROFILE, "");
-        if (multireddit != null) {
-            subredditPosts = new MultiredditPosts(multireddit, profile);
-        } else {
-            subredditPosts = new SubredditPosts(subreddit, Gallery.this);
-        }
+        subredditPosts = PostLoaderManager.getInstance();
         subreddit = multireddit == null ? subreddit : ("multi" + multireddit);
 
         if (multireddit == null) {
@@ -84,7 +79,6 @@ public class Gallery extends FullScreenActivity implements SubmissionDisplay {
             } else if (ContentType.getContentType(s) == ContentType.Type.IMAGE) {
                 baseSubs.add(s);
             }
-            subredditPosts.getPosts().add(s);
         }
 
         rv = (RecyclerView) findViewById(R.id.content_view);

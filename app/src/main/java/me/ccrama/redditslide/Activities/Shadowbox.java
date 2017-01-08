@@ -24,6 +24,7 @@ import me.ccrama.redditslide.HasSeen;
 import me.ccrama.redditslide.LastComments;
 import me.ccrama.redditslide.OfflineSubreddit;
 import me.ccrama.redditslide.PostLoader;
+import me.ccrama.redditslide.PostLoaderManager;
 import me.ccrama.redditslide.R;
 import me.ccrama.redditslide.SettingValues;
 
@@ -31,7 +32,6 @@ import me.ccrama.redditslide.SettingValues;
  * Created by ccrama on 9/17/2015.
  */
 public class Shadowbox extends FullScreenActivity implements SubmissionDisplay {
-    public static final String EXTRA_PROFILE = "profile";
     public static final String EXTRA_PAGE = "page";
     public static final String EXTRA_SUBREDDIT = "subreddit";
     public static final String EXTRA_MULTIREDDIT = "multireddit";
@@ -50,12 +50,7 @@ public class Shadowbox extends FullScreenActivity implements SubmissionDisplay {
         firstPage = getIntent().getExtras().getInt(EXTRA_PAGE, 0);
         subreddit = getIntent().getExtras().getString(EXTRA_SUBREDDIT);
         String multireddit = getIntent().getExtras().getString(EXTRA_MULTIREDDIT);
-        String profile = getIntent().getExtras().getString(EXTRA_PROFILE, "");
-        if (multireddit != null) {
-            subredditPosts = new MultiredditPosts(multireddit, profile);
-        } else {
-            subredditPosts = new SubredditPosts(subreddit, Shadowbox.this);
-        }
+        subredditPosts = PostLoaderManager.getInstance();
         subreddit = multireddit == null ? subreddit : ("multi" + multireddit);
 
         if(multireddit == null){
@@ -67,10 +62,6 @@ public class Shadowbox extends FullScreenActivity implements SubmissionDisplay {
         setContentView(R.layout.activity_slide);
 
         long offline = getIntent().getLongExtra("offline",0L);
-
-        OfflineSubreddit submissions = OfflineSubreddit.getSubreddit(subreddit, offline, !Authentication.didOnline, this);
-
-        subredditPosts.getPosts().addAll(submissions.submissions);
 
         pager = (ViewPager) findViewById(R.id.content_view);
         submissionsPager = new OverviewPagerAdapter(getSupportFragmentManager());

@@ -45,6 +45,7 @@ import me.ccrama.redditslide.Constants;
 import me.ccrama.redditslide.HasSeen;
 import me.ccrama.redditslide.Hidden;
 import me.ccrama.redditslide.OfflineSubreddit;
+import me.ccrama.redditslide.PostLoaderManager;
 import me.ccrama.redditslide.R;
 import me.ccrama.redditslide.Reddit;
 import me.ccrama.redditslide.SettingValues;
@@ -333,6 +334,7 @@ public class SubmissionsView extends Fragment implements SubmissionDisplay {
         }
 
         posts = new SubredditPosts(id, getContext());
+        PostLoaderManager.setInstance(posts);
         adapter = new SubmissionAdapter(getActivity(), posts, rv, id, this);
         adapter.setHasStableIds(true);
         rv.setAdapter(adapter);
@@ -354,6 +356,7 @@ public class SubmissionsView extends Fragment implements SubmissionDisplay {
         });
 
         posts = new SubredditPosts(id, getContext(), force18);
+        PostLoaderManager.setInstance(posts);
         adapter = new SubmissionAdapter(getActivity(), posts, rv, id, this);
         adapter.setHasStableIds(true);
         rv.setAdapter(adapter);
