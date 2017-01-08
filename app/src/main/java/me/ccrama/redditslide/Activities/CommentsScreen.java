@@ -28,6 +28,7 @@ import me.ccrama.redditslide.Fragments.CommentPage;
 import me.ccrama.redditslide.LastComments;
 import me.ccrama.redditslide.OfflineSubreddit;
 import me.ccrama.redditslide.PostLoader;
+import me.ccrama.redditslide.PostLoaderManager;
 import me.ccrama.redditslide.R;
 import me.ccrama.redditslide.Reddit;
 import me.ccrama.redditslide.SettingValues;
@@ -150,19 +151,15 @@ public class CommentsScreen extends BaseActivityAnim implements SubmissionDispla
         multireddit = getIntent().getExtras().getString(EXTRA_MULTIREDDIT);
         profile = getIntent().getExtras().getString(EXTRA_PROFILE, "");
         currentPosts = new ArrayList<>();
+        subredditPosts = PostLoaderManager.getInstance();
         if (multireddit == null) {
             baseSubreddit = subreddit.toLowerCase();
-            subredditPosts = new SubredditPosts(baseSubreddit, CommentsScreen.this);
         }
 
         if (firstPage == RecyclerView.NO_POSITION || firstPage < 0) {
             firstPage = 0;
             //IS SINGLE POST
         } else {
-            OfflineSubreddit o = OfflineSubreddit.getSubreddit(
-                    multireddit == null ? baseSubreddit : "multi" + multireddit,
-                    OfflineSubreddit.currentid, !Authentication.didOnline, CommentsScreen.this);
-            subredditPosts.getPosts().addAll(o.submissions);
             currentPosts.addAll(subredditPosts.getPosts());
         }
 
